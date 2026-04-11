@@ -1,12 +1,15 @@
 import { z } from "zod"
 
 const envSchema = z.object({
+  SPOTIFY_CLIENT_ID: z.string("SPOTIFY_CLIENT_ID is required"),
   SPOTIFY_CLIENT_SECRET: z.string("SPOTIFY_CLIENT_SECRET is required"),
 })
 
-export const env = envSchema.safeParse(process.env)
+const _env = envSchema.safeParse(process.env)
 
-if (!env.success) {
-  console.error("❌ Invalid environment variables:", z.treeifyError(env.error))
+if (!_env.success) {
+  console.error("❌ Invalid environment variables:", z.treeifyError(_env.error))
   throw new Error("❌ Invalid environment variables")
 }
+
+export const env = _env.data
