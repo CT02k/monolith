@@ -3,6 +3,7 @@ import { z } from "zod"
 const envSchema = z.object({
   SPOTIFY_CLIENT_ID: z.string("SPOTIFY_CLIENT_ID is required"),
   SPOTIFY_CLIENT_SECRET: z.string("SPOTIFY_CLIENT_SECRET is required"),
+  YOUTUBE_API_KEY: z.string("YOUTUBE_API_KEY is required"),
 })
 
 const _env = envSchema.safeParse(process.env)

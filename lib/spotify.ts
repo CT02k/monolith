@@ -1,8 +1,9 @@
 import { SpotifyApi } from "@spotify/web-api-ts-sdk"
+import { env } from "./env"
 
 const spotify = SpotifyApi.withClientCredentials(
-  "38f16be1ff184568b93be029774924f0",
-  "566b27fcd191490eae687c3672f9c8bd"
+  env.SPOTIFY_CLIENT_ID,
+  env.SPOTIFY_CLIENT_SECRET
 )
 
 export function getPlaylistTracks(playlistId: string) {
