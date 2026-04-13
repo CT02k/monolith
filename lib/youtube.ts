@@ -1,5 +1,5 @@
 import { youtube } from "@googleapis/youtube"
-import { env } from "process"
+import { env } from "./env"
 
 const client = youtube({
   version: "v3",
