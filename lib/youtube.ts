@@ -11,7 +11,7 @@ function searchVideos(query: string) {
     part: ["snippet"],
     q: query,
     type: ["video"],
-    maxResults: 5,
+    maxResults: 1,
   })
 }
 

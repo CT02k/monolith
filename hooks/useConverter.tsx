@@ -1,17 +1,29 @@
 import { useState } from "react"
 
 type ConvertedTrack = {
-  spotifyTitle: string
-  spotifyArtists: string[]
-  youtubeTitle: string | null
-  youtubeVideoId: string | null
-  youtubeUrl: string | null
+  id?: {
+    videoId?: string | null
+  } | null
+  snippet?: {
+    title?: string | null
+    channelTitle?: string | null
+    thumbnails?: {
+      high?: {
+        url?: string | null
+      }
+      medium?: {
+        url?: string | null
+      }
+      default?: {
+        url?: string | null
+      }
+    } | null
+  } | null
 }
 
 type ConvertResponse = {
-  playlistId: string
-  total: number
-  converted: ConvertedTrack[]
+  convertedTracks: ConvertedTrack[]
+  url: string
 }
 
 export function useConverter() {
@@ -32,10 +44,18 @@ export function useConverter() {
         },
         body: JSON.stringify({ playlistUrl }),
       })
+
+      if (!response.ok) {
+        const message = await response.text()
+        throw new Error(message || "Failed to convert playlist")
+      }
+
       const result = await response.json()
       setData(result)
     } catch (err) {
-      setError("Failed to convert playlist")
+      setError(
+        err instanceof Error ? err.message : "Failed to convert playlist"
+      )
     } finally {
       setLoading(false)
     }
