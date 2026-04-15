@@ -3,6 +3,7 @@
 import Image from "next/image"
 import { LoaderCircle } from "lucide-react"
 import { useState } from "react"
+import { decode } from "html-entities"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -16,6 +17,10 @@ export default function Page() {
 
   return (
     <div className="flex min-h-svh flex-col items-center justify-center px-4">
+      <p className="mb-4 max-w-md rounded-full border border-amber-500/30 bg-amber-500/10 px-4 py-2 text-center text-xs text-amber-700 dark:text-amber-300">
+        Currently only fetching the first 5 songs because the YouTube API is
+        mercenary and the free quota is very low.
+      </p>
       <h1 className="text-center text-2xl font-medium">
         Convert Spotify Playlists to YouTube
       </h1>
@@ -67,9 +72,9 @@ export default function Page() {
               href={data.url}
               target="_blank"
               rel="noreferrer"
-              className="block rounded-2xl border border-primary/30 bg-primary/10 px-4 py-3 text-sm font-medium text-primary transition-colors hover:bg-primary/15"
+              className="block rounded-full bg-primary px-4 py-3 text-center text-sm font-medium text-black transition-all hover:bg-primary/90"
             >
-              Open converted playlist on YouTube
+              Open on YouTube
             </a>
           ) : null}
 
@@ -109,10 +114,12 @@ export default function Page() {
                     </div>
                     <div className="min-w-0">
                       <p className="line-clamp-2 text-sm font-medium">
-                        {track.snippet?.title ?? "No title found"}
+                        {decode(track.snippet?.title ?? "No title found")}
                       </p>
                       <p className="mt-1 truncate text-xs text-muted-foreground">
-                        {track.snippet?.channelTitle ?? "Unknown channel"}
+                        {decode(
+                          track.snippet?.channelTitle ?? "Unknown channel"
+                        )}
                       </p>
                     </div>
                   </a>
