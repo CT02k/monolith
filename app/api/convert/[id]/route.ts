@@ -7,7 +7,7 @@ export async function GET(
 ) {
   const { id } = await params
 
-  const data = getPlaylistConversion(id)
+  const data = await getPlaylistConversion(id)
 
   if (!data) {
     return new NextResponse("Playlist conversion not found", { status: 404 })
