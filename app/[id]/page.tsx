@@ -1,21 +1,22 @@
-"use client"
-
 import Image from "next/image"
-import { LoaderCircle } from "lucide-react"
-import { useState } from "react"
+import Link from "next/link"
+import { notFound } from "next/navigation"
 import { decode } from "html-entities"
+import { getPlaylistConversion } from "@/lib/db"
 
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { useConverter } from "@/hooks/useConverter"
-import { useRouter } from "next/navigation"
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ id: string }>
+}) {
+  const { id } = await params
+  const data = await getPlaylistConversion(id)
 
-export default function Page() {
-  const [playlistUrl, setPlaylistUrl] = useState("")
-  const router = useRouter()
-  const { convert, loading, error, data } = useConverter()
+  if (!data) {
+    notFound()
+  }
 
-  const hasTracks = (data?.tracks.length ?? 0) > 0
+  const hasTracks = data.tracks.length > 0
 
   return (
     <div className="flex min-h-svh flex-col items-center justify-center px-4">
@@ -23,56 +24,18 @@ export default function Page() {
         Currently only fetching the first 5 songs because the YouTube API is
         mercenary and the free quota is very low.
       </p>
+
       <h1 className="text-center text-2xl font-medium">
         Convert Spotify Playlists to YouTube
       </h1>
-      <form
-        className="mt-10 flex w-full max-w-md items-center rounded-full border p-1"
-        onSubmit={async (e) => {
-          e.preventDefault()
-          if (!playlistUrl.trim()) return
-          const id = await convert(playlistUrl)
-          if (id) {
-            router.push(`/convert/${id}`)
-          }
-        }}
-      >
-        <Input
-          placeholder="https://open.spotify.com/playlist/..."
-          style={{ backgroundColor: "transparent" }}
-          className="rounded-full border-0 focus-visible:ring-0"
-          name="playlistUrl"
-          value={playlistUrl}
-          onChange={(e) => setPlaylistUrl(e.target.value)}
-        />
-        <Button
-          className="cursor-pointer rounded-full"
-          size="lg"
-          type="submit"
-          disabled={loading || !playlistUrl.trim()}
-        >
-          {loading ? "Converting..." : "Convert"}
-        </Button>
-      </form>
-      <div
-        className={`w-full max-w-100 overflow-hidden rounded-b-2xl border-x border-b transition-all ${
-          loading || error || hasTracks ? "h-lg opacity-100" : "h-0 opacity-0"
-        }`}
-      >
+
+      <Link href="/" className="mt-10 rounded-full border px-4 py-2 text-sm">
+        Convert another playlist
+      </Link>
+
+      <div className="mt-4 w-full max-w-100 overflow-hidden rounded-2xl border">
         <div className="max-h-lg space-y-3 overflow-y-auto bg-card/80 p-3 backdrop-blur">
-          {loading ? (
-            <div className="flex items-center justify-center rounded-xl px-4 py-8 text-primary">
-              <LoaderCircle className="animate-spin" />
-            </div>
-          ) : null}
-
-          {!loading && error ? (
-            <div className="rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
-              {error}
-            </div>
-          ) : null}
-
-          {!loading && hasTracks && data?.youtubeUrl ? (
+          {hasTracks && data.youtubeUrl ? (
             <a
               href={data.youtubeUrl}
               target="_blank"
@@ -83,8 +46,8 @@ export default function Page() {
             </a>
           ) : null}
 
-          {!loading && hasTracks
-            ? data?.tracks.map((track, index) => {
+          {hasTracks
+            ? data.tracks.map((track, index) => {
                 const href = track.youtubeId
                   ? `https://www.youtube.com/watch?v=${track.youtubeId}`
                   : null
@@ -112,6 +75,7 @@ export default function Page() {
                         </div>
                       )}
                     </div>
+
                     <div className="min-w-0">
                       <p className="line-clamp-2 text-sm font-medium">
                         {decode(track.title ?? "No title found")}

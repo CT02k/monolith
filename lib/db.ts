@@ -34,3 +34,10 @@ export async function savePlaylistConversion({
     },
   })
 }
+
+export async function getPlaylistConversion(id: string) {
+  return await prisma.playlist.findUnique({
+    where: { id },
+    include: { tracks: true },
+  })
+}

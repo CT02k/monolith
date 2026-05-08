@@ -1,29 +1,25 @@
 import { useState } from "react"
 
 type ConvertedTrack = {
-  id?: {
-    videoId?: string | null
-  } | null
-  snippet?: {
-    title?: string | null
-    channelTitle?: string | null
-    thumbnails?: {
-      high?: {
-        url?: string | null
-      }
-      medium?: {
-        url?: string | null
-      }
-      default?: {
-        url?: string | null
-      }
-    } | null
-  } | null
+  id: string
+  playlistId: string
+  youtubeId: string
+  title: string
+  channelName: string
+  thumbnailUrl: string
 }
 
 type ConvertResponse = {
-  convertedTracks: ConvertedTrack[]
-  url: string
+  id: string
+  spotifyUrl: string
+  spotifyId: string
+  youtubeUrl: string
+  createdAt: string
+  tracks: ConvertedTrack[]
+}
+
+type CreateConversionResponse = {
+  id: string
 }
 
 export function useConverter() {
@@ -37,7 +33,7 @@ export function useConverter() {
     setData(null)
 
     try {
-      const response = await fetch("/api/convert", {
+      const createResponse = await fetch("/api/convert", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -45,17 +41,29 @@ export function useConverter() {
         body: JSON.stringify({ playlistUrl }),
       })
 
-      if (!response.ok) {
-        const message = await response.text()
+      if (!createResponse.ok) {
+        const message = await createResponse.text()
         throw new Error(message || "Failed to convert playlist")
       }
 
-      const result = await response.json()
+      const { id } = (await createResponse.json()) as CreateConversionResponse
+
+      const conversionResponse = await fetch(`/api/convert/${id}`)
+
+      if (!conversionResponse.ok) {
+        const message = await conversionResponse.text()
+        throw new Error(message || "Failed to load converted playlist")
+      }
+
+      const result = (await conversionResponse.json()) as ConvertResponse
       setData(result)
+
+      return id
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Failed to convert playlist"
       )
+      return null
     } finally {
       setLoading(false)
     }

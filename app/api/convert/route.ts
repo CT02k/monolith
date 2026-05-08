@@ -1,4 +1,5 @@
 import { convertSpotifyPlaylistToYoutube } from "@/lib/converter"
+import { savePlaylistConversion } from "@/lib/db"
 import { getPlaylistTracks } from "@/lib/spotify"
 import { parseSpotifyInput } from "@/lib/utils"
 import { NextResponse } from "next/server"
@@ -15,7 +16,14 @@ export async function POST(request: Request) {
     .slice(0, 5)
     .map((item) => item.track)
 
-  const convertedTracks = await convertSpotifyPlaylistToYoutube(tracks)
+  const conversion = await convertSpotifyPlaylistToYoutube(tracks)
 
-  return NextResponse.json(convertedTracks)
+  const savedPlaylist = await savePlaylistConversion({
+    spotifyUrl: playlistUrl,
+    spotifyId: playlistId,
+    convertedTracks: conversion.convertedTracks,
+    url: conversion.url,
+  })
+
+  return NextResponse.json({ id: savedPlaylist.id })
 }
