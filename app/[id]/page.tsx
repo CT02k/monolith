@@ -24,15 +24,6 @@ export default async function Page({
         Currently only fetching the first 5 songs because the YouTube API is
         mercenary and the free quota is very low.
       </p>
-
-      <h1 className="text-center text-2xl font-medium">
-        Convert Spotify Playlists to YouTube
-      </h1>
-
-      <Link href="/" className="mt-10 rounded-full border px-4 py-2 text-sm">
-        Convert another playlist
-      </Link>
-
       <div className="mt-4 w-full max-w-100 overflow-hidden rounded-2xl border">
         <div className="max-h-lg space-y-3 overflow-y-auto bg-card/80 p-3 backdrop-blur">
           {hasTracks && data.youtubeUrl ? (
@@ -90,6 +81,10 @@ export default async function Page({
             : null}
         </div>
       </div>
+
+      <Link href="/" className="mt-10 rounded-full border px-4 py-2 text-sm">
+        Convert another playlist
+      </Link>
     </div>
   )
 }

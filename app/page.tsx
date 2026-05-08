@@ -33,7 +33,7 @@ export default function Page() {
           if (!playlistUrl.trim()) return
           const id = await convert(playlistUrl)
           if (id) {
-            router.push(`/convert/${id}`)
+            router.push(`/${id}`)
           }
         }}
       >
