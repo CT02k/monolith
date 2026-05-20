@@ -25,7 +25,7 @@ export default async function Page({
         mercenary and the free quota is very low.
       </p>
       <div className="mt-4 w-full max-w-100 overflow-hidden rounded-2xl border">
-        <div className="max-h-lg space-y-3 overflow-y-auto bg-card/80 p-3 backdrop-blur">
+        <div className="max-h-lg overflow-y-auto bg-card/80 px-3 pt-3 backdrop-blur">
           {hasTracks && data.youtubeUrl ? (
             <a
               href={data.youtubeUrl}
@@ -37,48 +37,50 @@ export default async function Page({
             </a>
           ) : null}
 
-          {hasTracks
-            ? data.tracks.map((track, index) => {
-                const href = track.youtubeId
-                  ? `https://www.youtube.com/watch?v=${track.youtubeId}`
-                  : null
+          <div className="max-h-110 space-y-3 overflow-y-auto p-3">
+            {hasTracks
+              ? data.tracks.map((track, index) => {
+                  const href = track.youtubeId
+                    ? `https://www.youtube.com/watch?v=${track.youtubeId}`
+                    : null
 
-                return (
-                  <a
-                    key={`${track.youtubeId ?? "missing"}-${index}`}
-                    href={href ?? "#"}
-                    target={href ? "_blank" : undefined}
-                    rel={href ? "noreferrer" : undefined}
-                    className="flex items-center gap-3 rounded-2xl border border-border/70 bg-background/70 p-3 transition-colors hover:bg-muted/60"
-                  >
-                    <div className="relative h-16 w-28 shrink-0 overflow-hidden rounded-xl bg-muted">
-                      {track.thumbnailUrl ? (
-                        <Image
-                          src={track.thumbnailUrl}
-                          alt={track.title ?? "YouTube thumbnail"}
-                          fill
-                          className="object-cover"
-                          sizes="112px"
-                        />
-                      ) : (
-                        <div className="flex h-full items-center justify-center text-xs text-muted-foreground">
-                          No image
-                        </div>
-                      )}
-                    </div>
+                  return (
+                    <a
+                      key={`${track.youtubeId ?? "missing"}-${index}`}
+                      href={href ?? "#"}
+                      target={href ? "_blank" : undefined}
+                      rel={href ? "noreferrer" : undefined}
+                      className="flex items-center gap-3 rounded-2xl border border-border/70 bg-background/70 p-3 transition-colors hover:bg-muted/60"
+                    >
+                      <div className="relative h-16 w-28 shrink-0 overflow-hidden rounded-xl bg-muted">
+                        {track.thumbnailUrl ? (
+                          <Image
+                            src={track.thumbnailUrl}
+                            alt={track.title ?? "YouTube thumbnail"}
+                            fill
+                            className="object-cover"
+                            sizes="112px"
+                          />
+                        ) : (
+                          <div className="flex h-full items-center justify-center text-xs text-muted-foreground">
+                            No image
+                          </div>
+                        )}
+                      </div>
 
-                    <div className="min-w-0">
-                      <p className="line-clamp-2 text-sm font-medium">
-                        {decode(track.title ?? "No title found")}
-                      </p>
-                      <p className="mt-1 truncate text-xs text-muted-foreground">
-                        {decode(track.channelName ?? "Unknown channel")}
-                      </p>
-                    </div>
-                  </a>
-                )
-              })
-            : null}
+                      <div className="min-w-0">
+                        <p className="line-clamp-2 text-sm font-medium">
+                          {decode(track.title ?? "No title found")}
+                        </p>
+                        <p className="mt-1 truncate text-xs text-muted-foreground">
+                          {decode(track.channelName ?? "Unknown channel")}
+                        </p>
+                      </div>
+                    </a>
+                  )
+                })
+              : null}
+          </div>
         </div>
       </div>
 

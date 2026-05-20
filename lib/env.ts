@@ -5,6 +5,10 @@ const envSchema = z.object({
   SPOTIFY_CLIENT_ID: z.string("SPOTIFY_CLIENT_ID is required"),
   SPOTIFY_CLIENT_SECRET: z.string("SPOTIFY_CLIENT_SECRET is required"),
   YOUTUBE_API_KEY: z.string("YOUTUBE_API_KEY is required"),
+  TRACKS_LIMIT: z
+    .string("TRACKS_LIMIT must be a number")
+    .default("0")
+    .transform(Number),
 })
 
 const _env = envSchema.safeParse(process.env)

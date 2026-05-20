@@ -127,3 +127,17 @@
     @apply font-sans;
   }
 }
+
+@layer components {
+  ::-webkit-scrollbar {
+    @apply w-3;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply rounded-full border-3 border-transparent bg-muted bg-clip-content;
+  }
+}
